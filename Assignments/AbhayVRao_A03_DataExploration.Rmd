@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3: Data Exploration"
-author: "Abhay, Section #4"
+author: "Abhay V Rao, Section #4"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -59,8 +59,8 @@ carbon emissions and net primary productivity.
 *The size and number of tower plots surveyed depend on the stature of
 vegetation, and other characteristics.
 *Ground traps and elevated traps are installed, which are surveyed in the former
-case, once a year; in the latter, more frequent intervals which are determined
-by the nature of the woodland, among other factors.
+case, once a year; in the latter, at more frequent intervals which are 
+determined by the nature of the woodland, among other factors.
 
 
 
@@ -78,7 +78,8 @@ summary(Neonics$Effect)
 
 > Answer: The most studied effects are population (1803), followed by mortality
 (1493). This is likely because the researchers are most interested on the 
-impact of neonics on insect populations, and its consequences on mortality.
+impact of neonics on insect populations, and their consequences on insect 
+mortality.
 
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
@@ -107,18 +108,15 @@ or a related message.
 
 9. Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year. 
 ```{r}
-p <- ggplot(Neonics) +
+p0 <- ggplot(Neonics) +
   geom_freqpoly(aes(x = Publication.Year), bins = 50
   )
 
-print(p)
+print(p0)
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
-```{r, fig.height = 3, fig.width = 4}
-#
-summary(Neonics$Test.Location)
-
+```{r, fig.height = 5, fig.width = 10}
 #
 p1 <- ggplot(Neonics) +
   geom_freqpoly(aes(x = Publication.Year, color = Test.Location), bins = 50) +
@@ -130,7 +128,10 @@ print(p1)
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: 
+> Answer: 'Laboratory' and 'field natural' are the most common test locations,
+and they do vary over time; although the peaks - and therefore counts - of
+conditions associated with lab tests, tend to be higher, especially after the 
+year 2000.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
@@ -185,26 +186,27 @@ determining *how many* data points exist for a given plot.
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 ```{r, fig.height= 4, fig.width= 10}
 #
-ggplot(Litter) +
+p4 <- ggplot(Litter) +
   geom_bar(aes(x= functionalGroup))
-
+print(p4)
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup. 
 ```{r}
-B <- ggplot(Litter)+
+p5 <- ggplot(Litter)+
   geom_boxplot(aes(x=functionalGroup, y=dryMass))
-print(B)
+print(p5)
 
-C <- ggplot(Litter)+
+p6 <- ggplot(Litter)+
   geom_violin(aes(x=functionalGroup, y=dryMass))
-print(C)
+print(p6)
 ```
 
 Why is the boxplot a more effective visualization option than the violin plot in this case?
 
 > Answer: The boxplot shares more insight that the violin plot, because the 
-data is widely distributed within categories. 
+data is sparsely distributed within categories such as mixed, needles, twigs 
+and woody material.
 
 What type(s) of litter tend to have the highest biomass at these sites? 
 
