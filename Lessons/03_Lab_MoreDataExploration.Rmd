@@ -17,6 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Data Types in R
 R treats objects differently based on their characteristics. For more information, please see: https://www.statmethods.net/input/datatypes.html. 
 
+Numbers come in integers and 'doubles' (with decimals)
+
+Characters - can come in strings
+
+Boolean - True or false
+
+Date is another type
+
 * **Vectors** 1 dimensional structure that contains elements of the same type.
 
 * **Matrices** 2 dimensional structure that contains elements of the same type.
@@ -30,14 +38,14 @@ R treats objects differently based on their characteristics. For more informatio
 Define what each new piece of syntax does below (i.e., fill in blank comments). Note that the R chunk has been divided into sections (# at beginning of line, ---- at end)
 ```{r}
 # Vectors ----
-vector1 <- c(1,2,5.3,6,-2,4) # numeric vector
-vector1
+vector1 <- c(1,2,5,3,6,-2,4) # numeric vector
+vector1 # this gets the values into the console. Giving a print command will render better formatting 
 vector2 <- c("one","two","three") # character vector
 vector2
 vector3 <- c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE) #logical vector
 vector3
 
-vector1[3] # 
+vector1[3] # give me the third item in this vector 
 
 # Matrices ----
 matrix1 <- matrix(1:20, nrow = 5,ncol = 4) # 
@@ -48,9 +56,9 @@ matrix3 <- matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE, # return after comma c
                   dimnames = list(c("uno", "dos", "tres", "cuatro", "cinco"), 
                                   c("un", "deux", "trois", "cat"))) #
 
-matrix1[4, ] #
-matrix1[ , 3] #
-matrix1[c(12, 14)] #
+matrix1[4, ] # Gives you data from every column if you do not specify one
+matrix1[ , 3] # Gives you data from every row 
+matrix1[c(12, 14)] # twelfth AND fourteenth value
 matrix1[c(12:14)] #
 matrix1[2:4, 1:3] #
 
@@ -63,15 +71,14 @@ matrix4
 
 # Lists ---- 
 list1 <- list(name = "Maria", mynumbers = vector1, mymatrix = matrix1, age = 5.3); list1
-list1[[2]]
+list1[[2]] # remember to refer to this for syntax!
 
-# Data Frames ----
+# Data Frames ---- there is some functional overlap with matrices
 d <- c(1, 2, 3, 4) # What type of vector?
 e <- c("red", "white", "red", NA) # What type of vector?
 f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector?
 dataframe1 <- data.frame(d,e,f) #
-names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # 
-
+names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # the view command just opens up the popup window on R Studio
 dataframe1[1:2,] # 
 dataframe1[c("ID","Passed")] # 
 dataframe1$ID
@@ -93,6 +100,10 @@ Question: In the R chunk below, write "dataframe1$". Press `tab` after you type 
 Find a ten-day forecast of temperatures (Fahrenheit) for Durham, North Carolina. Create two vectors, one representing the high temperature on each of the ten days and one representing the low.
 
 ```{r}
+vector4 <- c(45,50,33,43,51,54,59,66,57,42)
+vector4
+vector5 <- c(26,27,15,25,26,35,47,53,30,22)
+vector4
 
 ```
 
@@ -100,11 +111,27 @@ Now, create two additional vectors that include the ten-day forecast for the hig
 
 ```{r}
 
+FtoC <- function(x){
+c <- (x-32)*(5/9)
+return(c)
+  }
+CelsiusHigh <- FtoC(vector4)
+CelsiusHigh
+
+CelsiusLow <- FtoC(vector5)
+CelsiusLow
 ```
 
 Combine your four vectors into a data frame and add informative column names.
 
 ```{r}
+
+g <- vector4 # What type of vector?
+h <- vector5
+i <- CelsiusHigh
+j <- CelsiusLow
+dataframe2 <- data.frame(g,h,i,j) #
+names(dataframe2) <- c("F High","F Low","C High", "C Low"); View(dataframe2) # the view command just opens up the popup window on R Studio
 
 ```
 
