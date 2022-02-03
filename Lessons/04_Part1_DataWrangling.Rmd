@@ -26,8 +26,8 @@ getwd()
 #install.packages(tidyverse)
 library(tidyverse)
 #install.packages(lubridate)
+NTL.phys.data <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = TRUE) #Ok this means summary works for character entries. 
 library(lubridate)
-NTL.phys.data <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = TRUE)
 
 colnames(NTL.phys.data)
 head(NTL.phys.data)
@@ -35,7 +35,7 @@ summary(NTL.phys.data)
 str(NTL.phys.data)
 dim(NTL.phys.data)
 
-class(NTL.phys.data$sampledate)
+class(NTL.phys.data$sampledate) # is factor the same as chr?
 # Format sampledate as date
 NTL.phys.data$sampledate <- as.Date(NTL.phys.data$sampledate, format = "%m/%d/%y")
 ```
@@ -55,7 +55,7 @@ What is the best way to wrangle data? There are multiple ways to arrive at a spe
 `dplyr` is a package in R that includes functions for data manipulation (i.e., data wrangling or data munging). `dplyr` is included in the tidyverse package, so you should already have it installed on your machine. The functions act as verbs for data wrangling processes. For more information, run this line of code:
 
 ```{r, results = "hide"}
-vignette("dplyr")
+vignette("dplyr") # 'vignette' gives you an overview of the package
 ```
 
 ### Filter
@@ -63,14 +63,14 @@ vignette("dplyr")
 Filtering allows us to choose certain rows (observations) in our dataset.
 
 Here are the relevant commands used in the `filter` function. Add some notes to designate what these commands mean. 
-`==`
-`!=`
-`<`
-`<=`
-`>`
-`>=`
-`&`
-`|`
+`==`equals
+`!=`not equal
+`<`less
+`<=`is? no less than only
+`>`greater
+`>=`greater or equal
+`&`if we want both to be true
+`|`IF only one is to be true
 
 ```{r}
 class(NTL.phys.data$lakeid)
@@ -81,7 +81,7 @@ NTL.phys.data.surface1 <- NTL.phys.data[NTL.phys.data$depth == 0,]
 
 # dplyr filtering
 NTL.phys.data.surface2 <- filter(NTL.phys.data, depth == 0)
-NTL.phys.data.surface3 <- filter(NTL.phys.data, depth < 0.25)
+NTL.phys.data.surface3 <- filter(NTL.phys.data, depth < 0.25) # because .25 is practically at the surface
 
 # Did the methods arrive at the same result?
 head(NTL.phys.data.surface1)
@@ -98,7 +98,7 @@ NTL.phys.data.PeterPaul2 <- filter(NTL.phys.data, lakename != "Central Long Lake
                                      lakename != "Crampton Lake" & lakename != "East Long Lake" &
                                      lakename != "Hummingbird Lake" & lakename != "Tuesday Lake" &
                                      lakename != "Ward Lake" & lakename != "West Long Lake")
-NTL.phys.data.PeterPaul3 <- filter(NTL.phys.data, lakename %in% c("Paul Lake", "Peter Lake"))
+NTL.phys.data.PeterPaul3 <- filter(NTL.phys.data, lakename %in% c("Paul Lake", "Peter Lake")) # the percent thing allows you to create a vector with what you want to include
 
 # Choose a range of conditions of a numeric or integer variable
 summary(NTL.phys.data$daynum)
