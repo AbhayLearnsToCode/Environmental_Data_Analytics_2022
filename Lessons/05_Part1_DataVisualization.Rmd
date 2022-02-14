@@ -87,7 +87,7 @@ print(O3plot)
 
 # Fix this code
 O3plot2 <- ggplot(EPAair) +
-  #geom_point(aes(x = Date, y = Ozone, color = "blue"))
+  #geom_point(aes(x = Date, y = Ozone, color = "blue")) it's inside the brackets so it's like adding another layer to the plot
   geom_point(aes(x = Date, y = Ozone), color = "blue")
 print(O3plot2)
 
@@ -138,7 +138,7 @@ print(lightvsDO)
 lightvsDOfixed <- 
   ggplot(PeterPaul.chem.nutrients, aes(x = irradianceWater, y = dissolvedOxygen)) +
   geom_point() +
-  xlim(0, 250) +
+  xlim(0, 250) + #max value for x axis added
   ylim(0, 20)
 print(lightvsDOfixed)
 
@@ -147,7 +147,7 @@ tempvsdepth <-
   ggplot(PeterPaul.chem.nutrients, aes(x = temperature_C, y = depth)) +
   #ggplot(PeterPaul.chem.nutrients, aes(x = temperature_C, y = depth, color = daynum)) +
   geom_point() +
-  scale_y_reverse()
+  scale_y_reverse() # to reflect depth
 print(tempvsdepth)
 
 NvsP <-
@@ -168,14 +168,14 @@ What might be more effective ways to display the information? Navigate to the bo
 # Box and whiskers plot
 Nutrientplot3 <-
   ggplot(PeterPaul.chem.nutrients.gathered, aes(x = lakename, y = concentration)) +
-  geom_boxplot(aes(color = nutrient)) # Why didn't we use "fill"?
+  geom_boxplot(aes(color = nutrient)) # Why didn't we use "fill"? - It changes the fill of the boxplot
 print(Nutrientplot3)
 
 # Dot plot
 Nutrientplot4 <-
   ggplot(PeterPaul.chem.nutrients.gathered, aes(x = lakename, y = concentration)) +
   geom_dotplot(aes(color = nutrient, fill = nutrient), binaxis = "y", binwidth = 1, 
-               stackdir = "center", position = "dodge", dotsize = 2) #
+               stackdir = "center", position = "dodge", dotsize = 2) # not totally sure what is going on here
 print(Nutrientplot4)
 
 # Violin plot
