@@ -1,5 +1,5 @@
 ---
-title: "Assignment 6: GLMs (Linear Regressios, ANOVA, & t-tests)"
+title: "Assignment 6: GLMs (Linear Regressions, ANOVA, & t-tests)"
 author: "Abhay V Rao"
 output: pdf_document
 geometry: margin=2.54cm
@@ -27,7 +27,9 @@ The completed exercise is due on Monday, February 28 at 7:00 pm.
 
 ```{r setup}
 #1
-Chemistry_Data_Raw <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = FALSE)
+getwd()
+Chemistry_Data_Raw <- read.csv("../Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", 
+                               stringsAsFactors = FALSE)
 #importing the raw dataset
 
 library(lubridate) # loading lubridate to set date
@@ -78,7 +80,7 @@ summary(NTL_Wrangled_July) # no NAs!
 NTL_regression_print <- 
   ggplot(NTL_Wrangled_July, aes(x = depth, y = temperature_C)) +
   geom_point() +
-  geom_smooth(method = "lm")+
+  geom_smooth(method = "lm", se=TRUE)+
   ylim(0,35)
 print(NTL_regression_print) 
 
@@ -88,8 +90,8 @@ print(NTL_regression_print)
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
 > Answer: Temperature appears to reduce until a certain depth, where it starts
-to level off. The standard error of the regression line increases past this point, 
-about 8 meters' depth.
+to level off, at about 8 meters. The correlation between depth and temperature
+is apparent
 
 7. Perform a linear regression to test the relationship and display the results
 
@@ -185,7 +187,7 @@ indicates a substantial difference in means as compared to the intercept term.
 
 NTLplot <- ggplot(NTL_Wrangled_July, aes(x = depth, y =temperature_C, color=lakename)) +
   geom_point(alpha=0.5) +
-  geom_smooth(method = "lm", se= FALSE)+
+  geom_smooth(method = "lm",color="BLACK", se= FALSE)+
   ylim(0,35)+
   facet_wrap(vars(lakename), nrow = 2)
 print(NTLplot)
@@ -196,11 +198,12 @@ print(NTLplot)
 
 ```{r tukey.test}
 #15
-TukeyHSD(Lake_Temp_anova)
+TukeyHSD(Lake_Temp_anova)#assessing difference between means 
 
 TreatmentGroups_LakeTemp <- HSD.test(Lake_Temp_anova,"lakename", group = TRUE)
-TreatmentGroups_LakeTemp
+TreatmentGroups_LakeTemp #grouping lakes which have similar means
 
+#visualizing these groupings
 HSDGroups.plot <- ggplot(NTL_Wrangled_July, aes(x = lakename, y = temperature_C)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +

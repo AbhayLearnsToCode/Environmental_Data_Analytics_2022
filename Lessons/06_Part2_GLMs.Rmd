@@ -16,6 +16,7 @@ editor_options:
 ```{r, message = FALSE}
 getwd()
 library(tidyverse)
+library(htmltools)
 #install.packages("agricolae")
 library(agricolae)   #you may need to install/update package "htmltools" before installing and loading agricolae
 
@@ -28,6 +29,7 @@ Litter$collectDate <- as.Date(Litter$collectDate , format = "%Y-%m-%d")
 mytheme <- theme_classic(base_size = 14) +
   theme(axis.text = element_text(color = "black"), 
         legend.position = "top")
+
 theme_set(mytheme)
 ```
 
@@ -48,7 +50,7 @@ summary(Litter.Totals$plotID)
 # Test for normality. 
 # Note: the important assumption for GLMs is normality of residuals, 
 # not necessarily normality of raw data. See below when we plot the model.
-# shapiro.test() performs the Shapiro-Wilk test of the null that data follows a normal distribution
+# shapiro.test() performs the Shapiro-Wilk test of the null that data follows a normal distribution. If p > 0.05, it follows a null distribution
 
 shapiro.test(Litter.Totals$dryMass[Litter.Totals$plotID == "NIWO_040"])
 shapiro.test(Litter.Totals$dryMass[Litter.Totals$plotID == "NIWO_041"])

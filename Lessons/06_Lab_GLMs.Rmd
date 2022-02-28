@@ -14,6 +14,14 @@ editor_options:
 3. Additional comments on videos - t-test
 4. Practice more application GLM to real datasets
 
+Notes:
+Residuals - the lower it is, the better our model is
+Leverage - if a data point has major influence on our results
+Transforming the data - going logarithmic with the data - review
+Null hyp in ANOVA - no variance
+Tukey - tells us about the distribution of populations 
+
+
 
 ## Set up
 ```{r, message = FALSE}
@@ -66,23 +74,26 @@ Are Ozone levels below the threshold for "good" AQI index (0-50)?
 
 > Exercise 1: State the hypotheses for testing mean of AQI index.
 
-> Answer: 
+> Answer: The AQI emissions are 50 ppm. H alt - they are less than 50 (one sided)
+
 
 
 ```{r}
 
 
-summary(EPAair$Ozone)
-EPAair.subsample <- sample_n(EPAair, 5000)
+summary(EPAair$Ozone) # the sample is within the range of what we want - the t-test tells us if we can extrapolate this to the broader data
+EPAair.subsample <- sample_n(EPAair, 5000) # shapiro can run only 5000 so we do this
 
 # Evaluate assumption of normal distribution
-shapiro.test((EPAair.subsample$Ozone))
+shapiro.test((EPAair.subsample$Ozone)) #indicates that the results are NOT normal
 ggplot(EPAair, aes(x = Ozone)) +
   geom_histogram() 
-qqnorm(EPAair$Ozone); qqline(EPAair$Ozone)
+qqnorm(EPAair$Ozone); qqline(EPAair$Ozone) # we WANT this to be a nice diagonal. In this case it is not.
 
 O3.onesample <- t.test(EPAair$Ozone, mu = 50, alternative = "less")
-O3.onesample
+O3.onesample # one sample compares it to one value - null is the diff between sample mean and the value is zero
+
+# two sided - the diff is not zero
 
 Ozone.plot <- ggplot(EPAair, aes(x = Ozone)) +
   #geom_density(stat = "count", fill = "gray") +
@@ -94,11 +105,15 @@ print(Ozone.plot)
 
 Write a sentence or two about the results of this test. Include both the results of the test and an interpretation that puts the findings in context of the research question.
 
-> 
+> One sided t-test indicated that Ozone levels are below the 50 ppm threshold (p-value <2.2e-16). Failed the Shapiro test
+
+Reminder: p value is the likelihood that the null hypothesis is true
 
 ### Two-sample t-test
 
 The two-sample *t* test is used to test the hypothesis that the mean of two samples is equivalent. Unlike the one-sample tests, a two-sample test requires a second assumption that the variance of the two groups is equivalent. Are Ozone levels different between 2018 and 2019?
+
+If we have more than two samples, we use an ANOVA
 
 ```{r}
 shapiro.test(EPAair$Ozone[EPAair$Year == 2018])
@@ -152,6 +167,31 @@ Create three plots, each with appropriately formatted axes and legends. Choose a
 ```{r}
 #Exercise 2:
 
+library(ggridges)
+class (EPAair$Year)
+EPAair$Year <- as.factor(EPAair$Year)
+
+ggplot(EPAair, aes(x = Ozone, fill= as.factor(Year))) +
+  geom_density(alpha = 0.5)+
+  labs(title="Density Plot: Ozone by year",
+       x="Ozone AQI",
+       y="Density",
+       fill="Year")+
+  scale_fill_manual(values=c('orange','grey'))
+
+ggplot(EPAair, aes(x=as.factor(Year), y=Ozone))+
+  geom_boxplot()+
+  stat_summary(geom="text",fun=max,vjust=-1,size=4,
+               label=c("a","b"), color="red")+
+  labs(x="",y="OZone AQI Value")+
+  ylim(0,150)
+
+ggplot(EPAair, aes(x=as.factor(Year), y=Ozone))+
+  geom_violin(draw_quantiles = 0.5)+
+  stat_summary(geom="text",fun=max,vjust=-1,size=4,
+               label=c("a","b"), color="red")+
+  labs(x="",y="OZone AQI Value")+
+  ylim(0,150)
 
 ```
 
@@ -164,8 +204,14 @@ For the NTL-LTER dataset, can we predict PM2.5 from Ozone?
 ```{r}
 
 #Exercise 3: Run a linear regression PM2.5 by Ozone. Find the p-value and R-squared value. 
+Ozone.regression <- lm(data = EPAair, Ozone ~ PM2.5)
+summary(Ozone.regression)
 
-
+O3byPM25 <- 
+  ggplot(EPAair, aes(x = Ozone, y = PM2.5)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+print(O3byPM25) 
 
 #Exercise 4: Build a scatterplot. Add a line and standard error for the linear regression. 
 
@@ -181,7 +227,7 @@ What other variables can we add to improve model?
 ```{r}
 
 #Exercise 5: Build correlation plots and identify more possible explanatory variables to add to the regression.
-
+Ex5 <- cor(EPAair %>% select(SITE_LATITUDE:PM2.5) %>% drop_na())
 
 
 
