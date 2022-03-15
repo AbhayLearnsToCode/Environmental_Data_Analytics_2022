@@ -47,25 +47,25 @@ theme_set(mytheme)
 
 ```{r, message = FALSE}
 #2
-Ozone1 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv", 
+Ozone1 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone2 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv", 
+Ozone2 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone3 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv", 
+Ozone3 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone4 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv", 
+Ozone4 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone5 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv", 
+Ozone5 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone6 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv", 
+Ozone6 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone7 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv", 
+Ozone7 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone8 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv", 
+Ozone8 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone9 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv", 
+Ozone9 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv", 
                    stringsAsFactors = TRUE)
-Ozone10 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv", 
+Ozone10 <- read.csv("../Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv", 
                     stringsAsFactors = TRUE)
 
 GaringerOzone <- rbind(Ozone1,Ozone2,Ozone3,Ozone4,Ozone5,Ozone6,Ozone7,
@@ -134,6 +134,8 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 GaringerOzoneClean <- 
   GaringerOzone %>% 
   mutate( Ozone.Concentration = zoo::na.approx(Daily.Max.8.hour.Ozone.Concentration) )
+
+#Interpolating to cover NA gaps
 
 ```
 
@@ -204,44 +206,27 @@ summary(Monthly.Ozone.Garinger.Trend2)
 
 > Answer:  There is visible seasonality to the data upon decomposition so the 
 seasonal Mann Kendall is the most appropriate. The trend analysis indicates, based on the
-p-value of 0.04965, that we can reject the null hypothesis. 
+p-value of 0.04965, that we can reject the null hypothesis that the data is stationary.
 
 13. Create a plot depicting mean monthly ozone concentrations over time, with both a geom_point and a geom_line layer. Edit your axis labels accordingly.
 
 ```{r}
 # 13
 
-# Creating data frame to see how the trend maps onto the original data
-Monthly.Ozone.Components <- as.data.frame(GaringerMonthlyDecomp$time.series[,1:3])
-Monthly.Ozone.Components <- mutate(Monthly.Ozone.Components, PPM = GaringerOzone.monthly$MeanOzone,
-                                   Date = GaringerOzone.monthly$month.year)
-# adding on the mean PPM and date columns to the decomposed TS
-
-Plot.Monthly.Ozone <- 
-  ggplot(Monthly.Ozone.Components) +
-  geom_line(aes(x = Date, y = PPM)) +
-  geom_line(aes(y= trend, x= Date), color ="#c13d75ff") +
-  ylab("Mean Ozone Concentration") +
-  xlab("Year")+
-  geom_hline(yintercept=0, lty=2)
-print(Plot.Monthly.Ozone)
-
-Plot.Monthly.Ozone.Seasonal <- 
-  ggplot(Monthly.Ozone.Components) +
-  geom_line(aes(x = Date, y = PPM)) +
-  geom_line(aes(y= seasonal, x= Date), color ="#c13d75ff") +
-  ylab("Mean Ozone Concentration") +
-  xlab("Year")+
-  geom_hline(yintercept=0, lty=2)
-print(Plot.Monthly.Ozone.Seasonal)
-
-
+Plot.Monthly.Ozone.Garinger <- ggplot(GaringerOzone.monthly, aes(x=month.year, y=MeanOzone))+
+  geom_point()+
+  geom_line()+
+  xlab("Date")+
+  ylab("Mean Ozone Concentration")+
+  geom_smooth(method=lm, se=FALSE)
+print(Plot.Monthly.Ozone.Garinger)
 
 ```
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: 
+> Answer: There is a negative slope over the ten year timeframe, indicating reducing
+ozone concentrations. The overall seasonal Mann Kendall p-value of < 0.05 confirms a monotonic trend. 
 
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
@@ -250,11 +235,30 @@ print(Plot.Monthly.Ozone.Seasonal)
 
 ```{r}
 #15
+# Creating data frame to see how the trend maps onto the original data
+Monthly.Ozone.Components <- as.data.frame(GaringerMonthlyDecomp$time.series[,2:3])
+Monthly.Ozone.Components.2 <- mutate(Monthly.Ozone.Components, PPM = GaringerOzone.monthly$MeanOzone,
+                                   Date = GaringerOzone.monthly$month.year)%>%
+  select(trend, remainder, PPM, Date)
+# adding on the mean PPM and date columns to the decomposed TS
+
+#Creating new TS
+TS.Ozone.2 <- ts(Monthly.Ozone.Components.2$PPM, start=c(2010,1), frequency= 12)
+
+#decomposing
+GaringerMonthlyDecomp.2 <- stl(TS.Ozone.2,s.window = "periodic")
+plot(GaringerMonthlyDecomp.2)
+
 
 
 #16
 
+Nonseasonal.Ozone.Garinger.Trend1 <- Kendall::MannKendall(TS.Ozone.2)
+Nonseasonal.Ozone.Garinger.Trend1
+summary(Nonseasonal.Ozone.Garinger.Trend1)
+
 
 ```
 
-> Answer: 
+> Answer: The Mann Kendall Test has a p-value of 0.33732, which accepts the null
+hypothesis, unlike the Seasonal Test.

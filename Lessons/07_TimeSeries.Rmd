@@ -184,7 +184,7 @@ summary(wind_data$AWND)
 # In real applications you will simply replace NAs
 wind_data_clean <- 
   wind_data %>% 
-  mutate( AWND.clean = zoo::na.approx(AWND) )
+  mutate( AWND.clean = zoo::na.approx(AWND) ) #packagename::function to (column)
 
 summary(wind_data_clean$AWND.clean)
 #Note the NA is gone
@@ -193,6 +193,9 @@ ggplot(wind_data_clean ) +
   geom_line(aes(x = DATE, y = AWND.clean), color = "red") +
   geom_line(aes(x = DATE, y = AWND), color = "black") +
   ylab("Average Wind Speed") 
+
+# In tsa, you need to REPLACE your NAs. Do not omit them. you need to replace them using na.approx
+
 ```
 
 ### Monotonic trend analysis, continued
@@ -224,6 +227,8 @@ f_year <- year(first(wind_data_clean$DATE))
 wind_data_ts <- ts(wind_data_clean$AWND.clean,
                    start=c(f_year,f_month),
                    frequency=12) 
+# defining first year and month is relevant for tsa
+
 
 #decompose
 wind_data_decomp <- stl(wind_data_ts,s.window = "periodic")
