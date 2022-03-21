@@ -118,6 +118,7 @@ EPAair.sf <- EPAair.sites %>%
   st_as_sf(coords = c('SITE_LONGITUDE','SITE_LATITUDE'),
            crs=4326)
 
+# longitude is x, lat is y
 #View the data using the methods above...
 
 ```
@@ -130,12 +131,12 @@ sfg_GraingerHall <- st_point(c(-78.9427,36.00465))
 class(sfg_GraingerHall)
 mapview(sfg_GraingerHall)
 
-#Upgrade to a simple feature geometry column by adding a crs 
+#Upgrade to a simple feature geometry column by adding a crs - this contextualizes the data as lat-long 
 sfc_GraingerHall <- st_sfc(sfg_GraingerHall,crs=4326)
 class(sfc_GraingerHall)
 mapview(sfc_GraingerHall)
 
-#Upgrade to a spatial dataframe
+#Upgrade to a spatial dataframe - adds a flag with info
 sf_GraingerHall <- st_as_sf(sfc_GraingerHall)
 sf_GraingerHall$Name = 'Grainger Hall'
 mapview(sf_GraingerHall)

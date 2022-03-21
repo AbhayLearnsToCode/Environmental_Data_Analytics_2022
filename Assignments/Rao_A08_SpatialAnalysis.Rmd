@@ -256,11 +256,6 @@ lancaster.co <- nebraska.county.utm %>%
 lancaster.gages <- NWIS.gage.location.utm%>%
   filter(st_intersects(x=.,y=lancaster.co,sparse=F))
 
-mapview(nebraska.county.utm, col.regions="grey")+
-mapview(lancaster.co,col.regions="white")+
-mapview(lancaster.gages, col.regions="blue")
-
-
 #24 Plot
 ggplot() + 
   geom_sf(data= nebraska.county.utm, fill="white")+
@@ -269,6 +264,10 @@ ggplot() +
   ggtitle("Gage Locations in Lancaster County", "Abhay V Rao")+
   ylab("Latitude")+
   xlab("Longitude")
+
+mapview(nebraska.county.utm, col.regions="grey")+
+mapview(lancaster.co,col.regions="white")+
+mapview(lancaster.gages, col.regions="blue")
   
 
 ```
