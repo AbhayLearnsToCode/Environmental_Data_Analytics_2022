@@ -4,6 +4,7 @@ author: "Abhay V. Rao"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 geometry: margin=2.54cm
 editor_options:
   chunk_output_type: console
@@ -39,8 +40,7 @@ library(tidyverse)
 library(sf)
 library(leaflet)
 library(mapview)
-
-library(RColorBrewer) # just in case
+library(RColorBrewer)
 
 mytheme <- theme_gray(base_size = 10) +
 theme(axis.text = element_text(color = "darkgrey"),
@@ -70,8 +70,12 @@ st_crs(nebraska.county.sf)
 #the crs is EPSG:4269
 
 #5. Plot the data
-ggplot(data=nebraska.county.sf)+
-  geom_sf()
+ggplot()+
+  geom_sf(data=nebraska.county.sf, fill="white")+
+  ggtitle("Counties in Nebraska", "Abhay V Rao")+
+  ylab("Latitude")+
+  xlab("Longitude")
+  
 
 mapview(nebraska.county.sf) # plotting using the ggplot and mapview approaches
 ```
@@ -127,7 +131,7 @@ colnames(NWIS.sf)
 
 12. What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: dec_long_va and dec_lat_Va are replaced by the geometry column.
+>ANSWER: dec_long_va and dec_lat_va are replaced by the geometry column.
 
 ### Plot the gage locations on top of the counties
 
@@ -228,7 +232,11 @@ NWIS.gage.location.utm <- st_transform(NWIS.location.join, crs=32614)
 #21 Plot the data
 ggplot() + 
   geom_sf(data = nebraska.county.utm, color='blue',fill="white") + 
-  geom_sf(data = NWIS.gage.location.utm, color='red',fill=NA) 
+  geom_sf(data = NWIS.gage.location.utm, color='red',fill=NA) +
+  ggtitle("NWIS Gage Locations, Nebraska, UTM Zone 14", "Abhay V Rao")+
+  ylab("Latitude")+
+  xlab("Longitude")
+  
 
 ```
 
@@ -256,7 +264,7 @@ lancaster.co <- nebraska.county.utm %>%
 lancaster.gages <- NWIS.gage.location.utm%>%
   filter(st_intersects(x=.,y=lancaster.co,sparse=F))
 
-#24 Plot
+#24 Plot in ggplot
 ggplot() + 
   geom_sf(data= nebraska.county.utm, fill="white")+
   geom_sf(data = lancaster.co, color='red',fill="lightgrey") + 
@@ -264,6 +272,8 @@ ggplot() +
   ggtitle("Gage Locations in Lancaster County", "Abhay V Rao")+
   ylab("Latitude")+
   xlab("Longitude")
+
+# Plot in mapview
 
 mapview(nebraska.county.utm, col.regions="grey")+
 mapview(lancaster.co,col.regions="white")+

@@ -119,9 +119,11 @@ Next, we'll extract multiple items from the web page into a list object. Using S
 Below is the code to extract average daily withdrawls. Add your code to extract max daily withdrawals into the `max_withdrawals` variable.
 ```{r scraping.multiple.objects}
 avg_withdrawals <- webpage %>% 
-  html_nodes('.table:nth-child(7) td:nth-child(7) , .table:nth-child(7) td:nth-child(3)') %>%
+  html_nodes('.table:nth-child(13) td:nth-child(7) , .table:nth-child(13) td:nth-child(3)') %>%
   html_text()
 avg_withdrawals
+
+# data is scraped as characters
 
 max_withdrawals <- webpage %>% 
   html_nodes('.table:nth-child(7) td:nth-child(8) , .table:nth-child(7) td:nth-child(4)') %>%
@@ -140,12 +142,16 @@ df_withdrawals <- data.frame("Month" = rep(1:12),
                              "Avg_Withdrawals_mgd" = as.numeric(avg_withdrawals),
                              "Max_Withdrawals_mgd" = as.numeric(max_withdrawals))
 
+#rep creates a sequence of numbers
+
 #Modify the dataframe to include the facility name and type as well as the date (as date object)
 df_withdrawals <- df_withdrawals %>% 
   mutate(Registrant = !!the_registrant,
          Facility_name = !!the_facility_name,
          Facility_type = !!the_facility_type,
          Date = my(paste(Month,"-",Year)))
+
+# !! - bangs - refers to variables
 
 #Plot 
 ggplot(df_withdrawals,aes(x=Date,y=Avg_Withdrawals_mgd)) + 
@@ -170,7 +176,7 @@ This begins by setting the parameters of the page we'll be scraping to variables
 #Construct the scraping web address, i.e. its URL
 the_base_url <- 'https://www.ncwater.org/WUDC/app/WWATR/report/view'
 the_facility <- '0004-0001'
-the_year <- 2015
+the_year <- 2011
 the_scrape_url <- paste0(the_base_url, '/', the_facility, '/', the_year)
 print(the_scrape_url)
 
@@ -202,7 +208,7 @@ df_withdrawals <- data.frame("Month" = rep(1:12),
 ggplot(df_withdrawals,aes(x=Date,y=Avg_Withdrawals_mgd)) + 
   geom_line() + 
   geom_smooth(method="loess",se=FALSE) +
-  labs(title = paste("2020 Water usage data for",the_registrant),
+  labs(title = paste(the_year,the_registrant),
        subtitle = the_facility_name,
        y="Withdrawal (mgd)",
        x="Date")
@@ -266,12 +272,12 @@ R can iterate using either "lapply" or Purrrs' "map" functions.
 the_years = rep(2018:2020)
 my_facility = '0004-0001'
 
-#Use lapply to apply the scrape function
+#Use lapply to apply the scrape function - repeat fn for stipulated range
 the_dfs <- lapply(X = the_years,
                   FUN = scrape.it,
                   the_facility=my_facility)
 
-#OR, use purrr's map function
+#OR, use purrr's map function - mapping values onto a function
 the_dfs <- map(the_years,scrape.it,the_facility=my_facility)
 
 #Conflate the returned dataframes into a single dataframe
