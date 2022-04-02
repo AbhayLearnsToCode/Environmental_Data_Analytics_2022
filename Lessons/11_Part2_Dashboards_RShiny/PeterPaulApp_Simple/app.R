@@ -16,7 +16,7 @@ ui <- fluidPage(
     sidebarPanel(
       
       # Select nutrient to plot
-      selectInput(inputId = "dropdown_input", 
+      selectInput(inputId = "dropdown_input", #internal ID. We don't see this in the output
                   label = "Nutrient",
                   choices = c("tn_ug", "tp_ug", "nh34", "no23", "po4"), 
                   selected = "tp_ug"),

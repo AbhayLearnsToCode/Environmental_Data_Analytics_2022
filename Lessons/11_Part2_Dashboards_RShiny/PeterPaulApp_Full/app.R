@@ -12,13 +12,13 @@ nutrient_data <- nutrient_data %>%
 
 #### Define UI ----
 ui <- fluidPage(theme = shinytheme("yeti"),
-  titlePanel("Nutrients in Peter Lake and Paul Lake"),
+  titlePanel("Nutrients in Peter Lake and Paul Lake, Lookie Here"),
   sidebarLayout(
     sidebarPanel(
       
       # Select nutrient to plot
       selectInput(inputId = "y", 
-                  label = "Nutrient",
+                  label = "Protein",
                   choices = c("tn_ug", "tp_ug", "nh34", "no23", "po4"), 
                   selected = "tp_ug"),
       
