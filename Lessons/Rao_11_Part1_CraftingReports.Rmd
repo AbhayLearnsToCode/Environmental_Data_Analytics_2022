@@ -96,7 +96,7 @@ Create a table below that details the example datasets we have been using in cla
 Create an R chunk below that installs the package `knitr`. Instead of commenting out the code, customize the chunk options such that the code is not evaluated (i.e., not run).
 
 ```{r Knitr Installation, eval=FALSE, include=FALSE}
-install.packages('knitr')
+install.packages(knitr)
 ```
 
 ### Setup
@@ -173,7 +173,7 @@ kable(NTL_Summary_TP, caption = "Total Phosphorous Across NTL Lakes")
 
 Create a fourth and fifth R chunk that generates two plots (one in each chunk): one for total N over time with different colors for each lake, and one with the same setup but for total P. Decide which geom option will be appropriate for your purpose, and select a color palette that is visually pleasing and accessible. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, customize the chunk options such that the figures are aligned on the left side of the page. Lastly, add a fig.cap chunk option to add a caption (title) to your plot that will display underneath the figure.
 
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE, fig.cap = "Total Nitrogen, 1992-1998", fig.align='left'}
 NTL_Summary_TN_Chart <-
   ggplot(NTL_Data_Processed, aes(x = year4, y = tn_ug, color = lakename)) +
   geom_boxplot()+
@@ -182,7 +182,7 @@ NTL_Summary_TN_Chart <-
 NTL_Summary_TN_Chart
 ```
 
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE, fig.cap = "Total Phosphorous, 1992-1998",fig.align='left'}
 NTL_Summary_TP_Chart <-
   ggplot(NTL_Data_Processed, aes(x = year4, y = tp_ug, color = lakename)) +
   geom_boxplot()+
